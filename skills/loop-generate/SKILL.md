@@ -69,6 +69,7 @@ Create `.loops/<loop-name>/` from the templates (`assets/loop-template.md`,
 `assets/state-template.md`):
 
 - `loop.md` — the spec. Fill every section; write "n/a + why" rather than deleting sections.
+  Include an exact `## Start command / runner config` section so `loop-run` can start it later.
 - `state.md` — the loop's memory. The model forgets everything between runs; this file is the
   spine. The loop prompt you generate MUST instruct: read `state.md` first, append to `runs.log`
   and update `state.md` last.

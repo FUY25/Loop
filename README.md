@@ -13,23 +13,38 @@ connectors, sub-agents) plus a state file on disk.
 |---|---|---|
 | `loop-scan` | Discover | Mines Claude Code + Codex session history for repeated work, babysat sessions, and re-explained context → ranked Loop Opportunities Report |
 | `loop-generate` | Design | Interviews you (or takes a scan finding) and scaffolds a complete loop: spec with verifiable stop condition, budget, escalation rules, state file, and the exact start command |
-| `loop-status` | Operate / maintain | Reads `.loops/` registries, flags stale/failing/over-budget loops, surfaces unreviewed findings, recommends retire/tune |
 | `loop-verify` | Verification layer | Encodes your *manual* verification steps (browser clicks, endpoint checks) into a project verification skill that loops and `/goal` conditions can call |
+| `loop-list` | Select / inspect | Lists runnable loops in the current project, including purpose, mechanism, status, last run, waiting findings, and file paths |
+| `loop-run` | Start | Fuzzy-matches a loop by name/purpose and prints or invokes the exact `/goal`, `/loop`, schedule, hook, GitHub Actions, or Codex Automation start command |
+| `loop-status` | Operate / maintain | Reads `.loops/` registries, flags stale/failing/over-budget loops, surfaces unreviewed findings, recommends retire/tune |
 
-## Lifecycle: a pipeline where every stage stands alone
+## Lifecycles: generate, then run
+
+There are two separate lifecycles. Generation produces loop specs; running operates those specs.
+
+### Generation lifecycle
 
 ```
-loop-scan ──> loop-generate ──> loop-verify ──> loop-status
-(discover)    (design)          (mechanize       (maintain)
-                                 the "done"
-                                 standard)
+loop-scan ──> loop-generate ──> loop-verify
+(discover)    (design)          (mechanize the "done" standard)
 ```
 
-Each skill consumes the previous one's output when present, but none requires it: generate a
-loop from scratch without a scan; run loop-verify just to harden one hook's check; run
-loop-status on any project with a `.loops/` folder. Scan findings are classified **loop / hook
-/ skill** — loops (recurring, stateful, verification-bearing work) are the first-class output;
-hooks and skills are reported as supporting finds, not dressed up as loops.
+Each generation skill consumes earlier output when present, but none requires it: generate a
+loop from scratch without a scan; run loop-verify before or after generation to harden one
+manual "done" check. Scan findings are classified **loop / hook / skill** — loops (recurring,
+stateful, verification-bearing work) are the first-class output; hooks and skills are reported
+as supporting finds, not dressed up as loops.
+
+### Run lifecycle
+
+```
+loop-list ──> loop-run ──> loop-status
+(inspect)    (start)      (maintain)
+```
+
+`loop-list` shows what exists in the current `.loops/` folder. `loop-run` fuzzy-matches one
+loop and prints or invokes the right runner command for its mechanism. `loop-status` checks what
+ran, what is stale, what hit budget, and what is waiting on a human.
 
 ## Example loops worth building
 
@@ -102,14 +117,16 @@ skills/
 ├── loop-scan/SKILL.md
 ├── loop-generate/SKILL.md
 ├── loop-verify/SKILL.md
+├── loop-list/SKILL.md
+├── loop-run/SKILL.md
 └── loop-status/SKILL.md
 ```
 
 Each skill lives in a lowercase kebab-case directory, and the directory name is the command
-name Claude Code uses (`/loop-scan`, `/loop-generate`, `/loop-verify`, `/loop-status`). The
-frontmatter `name` matches the directory name so skill listings and command names stay aligned.
-The shared `loop-*` prefix is intentional: these are a command family, not unrelated standalone
-skills.
+name Claude Code uses (`/loop-scan`, `/loop-generate`, `/loop-verify`, `/loop-list`,
+`/loop-run`, `/loop-status`). The frontmatter `name` matches the directory name so skill
+listings and command names stay aligned. The shared `loop-*` prefix is intentional: these are a
+command family, not unrelated standalone skills.
 
 The SKILL.md format is shared with Codex; porting later = copying to `~/.codex/skills/` and
 swapping the mechanism wiring (Claude: /goal, /loop, cron/schedule, hooks, GH Actions ↔

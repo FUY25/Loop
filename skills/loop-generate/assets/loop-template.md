@@ -9,6 +9,11 @@ Why this loop exists, in payoff terms (time saved, errors prevented, revenue pro
 - Mechanism: /goal | /loop <interval> | schedule/cron <expr> | hook <event> | GitHub Action
 - Runner-up considered: <mechanism> — <why not chosen>
 
+## Start command / runner config
+<exact command or config fragment that starts this loop, e.g. /goal "...", /loop 30m "...",
+cron line, schedule prompt, hook fragment, GitHub Actions workflow sketch, or Codex Automation
+prompt. `loop-run` prefers this section when present.>
+
 ## Workflow
 1. Read `.loops/<name>/state.md` (cross-run memory) — always first.
 2. <step>
