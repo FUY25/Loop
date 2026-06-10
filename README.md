@@ -93,6 +93,24 @@ Every skill in the family reads/writes the same per-project structure:
 ./scripts/install.sh        # copies skills/* to ~/.claude/skills/
 ```
 
+## Skill package layout
+
+This repo follows the Claude Code filesystem skill layout:
+
+```
+skills/
+├── loop-scan/SKILL.md
+├── loop-generate/SKILL.md
+├── loop-verify/SKILL.md
+└── loop-status/SKILL.md
+```
+
+Each skill lives in a lowercase kebab-case directory, and the directory name is the command
+name Claude Code uses (`/loop-scan`, `/loop-generate`, `/loop-verify`, `/loop-status`). The
+frontmatter `name` matches the directory name so skill listings and command names stay aligned.
+The shared `loop-*` prefix is intentional: these are a command family, not unrelated standalone
+skills.
+
 The SKILL.md format is shared with Codex; porting later = copying to `~/.codex/skills/` and
 swapping the mechanism wiring (Claude: /goal, /loop, cron/schedule, hooks, GH Actions ↔
 Codex: /goal, Automations tab).
@@ -100,6 +118,7 @@ Codex: /goal, Automations tab).
 ## Dev workflow
 
 - Source of truth: `skills/` here. Edit here, re-run `scripts/install.sh`.
-- Evals live in `evals/`.
 - Run artifacts live locally in `loops-workspace/iteration-N/` and are intentionally ignored:
   reports and digests may contain private prompts, tickets, credentials, or customer data.
+- Development evals live locally in `evals/` and are intentionally ignored; they are not part
+  of the skill package.

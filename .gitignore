@@ -11,6 +11,9 @@
 loops-workspace/
 .loops/
 
+# Development-only eval definitions are not part of the skill package.
+evals/
+
 # Common generated dependencies and build outputs.
 node_modules/
 __pycache__/
