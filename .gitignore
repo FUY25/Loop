@@ -1,0 +1,19 @@
+.DS_Store
+
+# Local agent/editor state.
+.claude/
+.codex/
+.stash-installed/
+
+# Loop run artifacts can contain private prompts, ticket data, credentials,
+# screenshots, logs, and generated reports. Keep the source skills public;
+# keep local loop memory local unless deliberately sanitized.
+loops-workspace/
+.loops/
+
+# Common generated dependencies and build outputs.
+node_modules/
+__pycache__/
+.pytest_cache/
+dist/
+build/
